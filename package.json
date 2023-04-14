@@ -4,6 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
     "lint": "eslint . --ext .js,.ts,.tsx,.cjs",
     "lint:fix": "eslint . --ext .js,.ts,.tsx,.cjs --fix",
     "prepare": "husky install"
@@ -22,6 +24,11 @@
     ]
   },
   "devDependencies": {
+    "@codemirror/commands": "^6.2.2",
+    "@codemirror/lang-markdown": "^6.1.1",
+    "@codemirror/language-data": "^6.2.0",
+    "@codemirror/state": "^6.2.0",
+    "@codemirror/view": "^6.9.4",
     "@typescript-eslint/eslint-plugin": ">=5.57.0",
     "@typescript-eslint/parser": ">=5.57.0",
     "eslint": "^8.38.0",
