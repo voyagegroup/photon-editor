@@ -2,6 +2,8 @@ import {defaultKeymap} from '@codemirror/commands';
 import {EditorState} from '@codemirror/state';
 import {keymap, EditorView} from '@codemirror/view';
 import {markdown} from '@codemirror/lang-markdown';
+import {syntaxHighlighting} from '@codemirror/language';
+import markdownHighlight from './highlight/markdown';
 
 type Options = {
   value: string | undefined;
@@ -25,6 +27,7 @@ class PhotonEditor {
         extensions: [
           markdown(),
           keymap.of(defaultKeymap),
+          syntaxHighlighting(markdownHighlight),
         ],
       }),
       parent: this.element,
