@@ -27,6 +27,9 @@ devDependencies:
   '@codemirror/view':
     specifier: ^6.9.4
     version: 6.9.4
+  '@types/superfine':
+    specifier: ^7.0.2
+    version: 7.0.2
   '@typescript-eslint/eslint-plugin':
     specifier: '>=5.57.0'
     version: 5.58.0(@typescript-eslint/parser@5.58.0)(eslint@8.38.0)(typescript@5.0.4)
@@ -669,6 +672,10 @@ packages:
 
   /@types/semver@7.3.13:
     resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
+    dev: true
+
+  /@types/superfine@7.0.2:
+    resolution: {integrity: sha512-QkU9/EO0EhgmLp1BumX4EuZybdEuHn/n3W2PETDXWOTSQs96Hcv9b5Gps/Po1ql0Mc4mTRKrEy212LI52jQc4A==}
     dev: true
 
   /@typescript-eslint/eslint-plugin@5.58.0(@typescript-eslint/parser@5.58.0)(eslint@8.38.0)(typescript@5.0.4):

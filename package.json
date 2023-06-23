@@ -29,6 +29,7 @@
     "@codemirror/language-data": "^6.2.0",
     "@codemirror/state": "^6.2.0",
     "@codemirror/view": "^6.9.4",
+    "@types/superfine": "^7.0.2",
     "@typescript-eslint/eslint-plugin": ">=5.57.0",
     "@typescript-eslint/parser": ">=5.57.0",
     "eslint": "^8.38.0",
