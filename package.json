@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@codemirror/language": "^6.6.0",
-    "@lezer/highlight": "^1.1.4"
+    "@lezer/highlight": "^1.1.4",
+    "superfine": "^8.2.0"
   }
 }
