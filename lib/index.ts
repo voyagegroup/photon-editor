@@ -1,3 +1,19 @@
+/**
+ * PhotonEditor
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at:
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License
+ */
+
 import {defaultKeymap} from '@codemirror/commands';
 import {EditorState} from '@codemirror/state';
 import {keymap, EditorView} from '@codemirror/view';
@@ -13,20 +29,31 @@ type Options = {
   photonEditorClass?: string;
 };
 
+/**
+ * Represents the main PhotonEditor class.
+ */
 class PhotonEditor {
   private editor: EditorView | undefined;
   private readonly layout: LayoutInterface;
 
+  /**
+   * Creates a new instance of PhotonEditor.
+   *
+   * @param {HTMLElement} element - The DOM element to attach the editor to.
+   * @param {Options} options - An object containing initial editor options.
+   * @param {LayoutInterface} [layout] - An optional custom layout object.
+   */
   constructor(
     private readonly element: HTMLElement,
     private readonly options: Options,
-    layout: LayoutInterface,
+    layout?: LayoutInterface,
   ) {
-    this.element = element;
-    this.options = options;
-    this.layout = layout || new DefaultLayout(this.element);
+    this.layout = layout ?? new DefaultLayout(this.element);
   }
 
+  /**
+   * Creates the editor within the specified container element.
+   */
   createEditor() {
     this.waitForContainerReady(editorContainer => {
       this.editor = new EditorView({
@@ -44,10 +71,20 @@ class PhotonEditor {
     this.layout.render();
   }
 
+  /**
+   * Returns the editor's current value as a string.
+   *
+   * @returns {string | undefined}
+   */
   getValue() {
     return this.editor?.state.doc.toString();
   }
 
+  /**
+   * Sets the editor's value given a new input value.
+   *
+   * @param {string} value - The content to set as the new editor value.
+   */
   setValue(value: string) {
     this.editor?.dispatch({
       changes: {
@@ -58,6 +95,13 @@ class PhotonEditor {
     });
   }
 
+  /**
+   * Waits for the editor's container DOM element to become available, then
+   * executes a callback function on it.
+   *
+   * @private
+   * @param {(element: HTMLElement) => void} callback - The callback function for the ready event.
+   */
   private waitForContainerReady(callback: (element: HTMLElement) => void) {
     const observer = new MutationObserver(() => {
       const editorContainer = this.layout.getEditorContainer();
