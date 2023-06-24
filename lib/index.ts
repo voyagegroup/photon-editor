@@ -28,7 +28,6 @@ class PhotonEditor {
   }
 
   createEditor() {
-    this.layout.render();
     this.waitForContainerReady(editorContainer => {
       this.editor = new EditorView({
         state: EditorState.create({
@@ -42,6 +41,7 @@ class PhotonEditor {
         parent: editorContainer,
       });
     });
+    this.layout.render();
   }
 
   getValue() {
