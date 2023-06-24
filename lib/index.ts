@@ -9,14 +9,13 @@ import {h, patch} from 'superfine';
 
 type Options = {
   value: string | undefined;
-  toolbarClass?: string;
   previewClass?: string;
   editorContainerClass?: string;
   photonEditorClass?: string;
 };
 
 type LayoutInterface = {
-  create(): void;
+  render(): void;
   getEditorContainer(): HTMLElement | undefined;
 };
 
@@ -28,19 +27,11 @@ class DefaultLayout implements LayoutInterface {
     this.parentElement = parentElement;
   }
 
-  create() {
-    this.render();
-  }
-
   getEditorContainer() {
     return this.editorContainer;
   }
 
-  private render() {
-    const toolbarVdom = h('div', {class: 'toolbar'}, [
-      // ここにツールバーのコンテンツを追加
-    ]);
-
+  render() {
     const previewVdom = h('div', {class: 'preview'}, [
       // ここにMarkdownのHTML変換結果を追加
     ]);
@@ -48,7 +39,6 @@ class DefaultLayout implements LayoutInterface {
     const editorContainerVdom = h('div', {class: 'editor-container'});
 
     const rootVdom = h('div', {class: 'photon-editor'}, [
-      toolbarVdom,
       editorContainerVdom,
       previewVdom,
     ]);
@@ -83,7 +73,7 @@ class PhotonEditor {
   }
 
   createEditor() {
-    this.layout.create();
+    this.layout.render();
     this.waitForContainerReady(editorContainer => {
       this.editor = new EditorView({
         state: EditorState.create({
@@ -123,11 +113,7 @@ class PhotonEditor {
       }
     });
 
-    // Observer構成オブジェクト
-    const config = {childList: true, subtree: true};
-
-    // 対象の要素とその子孫を監視を開始
-    observer.observe(this.element, config);
+    observer.observe(this.element, {childList: true, subtree: true});
   }
 }
 
