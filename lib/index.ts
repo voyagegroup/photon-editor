@@ -4,8 +4,7 @@ import {keymap, EditorView} from '@codemirror/view';
 import {markdown} from '@codemirror/lang-markdown';
 import {syntaxHighlighting} from '@codemirror/language';
 import markdownHighlight from './highlight/markdown';
-
-import {h, patch} from 'superfine';
+import {type LayoutInterface, DefaultLayout} from './layout';
 
 type Options = {
   value: string | undefined;
@@ -13,50 +12,6 @@ type Options = {
   editorContainerClass?: string;
   photonEditorClass?: string;
 };
-
-type LayoutInterface = {
-  render(): void;
-  getEditorContainer(): HTMLElement | undefined;
-};
-
-class DefaultLayout implements LayoutInterface {
-  private vdomRoot: HTMLElement | undefined;
-  private editorContainer: HTMLElement | undefined;
-
-  constructor(private readonly parentElement: HTMLElement) {
-    this.parentElement = parentElement;
-  }
-
-  getEditorContainer() {
-    return this.editorContainer;
-  }
-
-  render() {
-    const previewVdom = h('div', {class: 'preview'}, [
-      // ここにMarkdownのHTML変換結果を追加
-    ]);
-
-    const editorContainerVdom = h('div', {class: 'editor-container'});
-
-    const rootVdom = h('div', {class: 'photon-editor'}, [
-      editorContainerVdom,
-      previewVdom,
-    ]);
-
-    if (this.vdomRoot) {
-      patch(this.vdomRoot, rootVdom);
-    } else {
-      this.vdomRoot = document.createElement('div');
-      this.parentElement.appendChild(this.vdomRoot);
-      patch(this.vdomRoot, rootVdom);
-    }
-
-    const editorContainer = this.vdomRoot.querySelector('.editor-container');
-    if (editorContainer !== null) {
-      this.editorContainer = editorContainer as HTMLElement;
-    }
-  }
-}
 
 class PhotonEditor {
   private editor: EditorView | undefined;
