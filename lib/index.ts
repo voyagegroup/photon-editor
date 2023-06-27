@@ -21,6 +21,7 @@ import {markdown} from '@codemirror/lang-markdown';
 import {syntaxHighlighting} from '@codemirror/language';
 import markdownHighlight from './highlight/markdown';
 import {type LayoutInterface, DefaultLayout} from './layout';
+import {type MarkdownParserInterface, MarkdownParser} from './parser';
 
 type Options = {
   value: string | undefined;
@@ -35,6 +36,7 @@ type Options = {
 class PhotonEditor {
   private editor: EditorView | undefined;
   private readonly layout: LayoutInterface;
+  private readonly parser: MarkdownParserInterface;
 
   /**
    * Creates a new instance of PhotonEditor.
@@ -46,9 +48,11 @@ class PhotonEditor {
   constructor(
     private readonly element: HTMLElement,
     private readonly options: Options,
+    parser?: MarkdownParserInterface,
     layout?: LayoutInterface,
   ) {
     this.layout = layout ?? new DefaultLayout(this.element);
+    this.parser = parser ?? new MarkdownParser();
   }
 
   /**
@@ -63,6 +67,7 @@ class PhotonEditor {
             markdown(),
             keymap.of(defaultKeymap),
             syntaxHighlighting(markdownHighlight),
+            EditorView.updateListener.of(this.handleEditorUpdate.bind(this)),
           ],
         }),
         parent: editorContainer,
@@ -113,6 +118,16 @@ class PhotonEditor {
     });
 
     observer.observe(this.element, {childList: true, subtree: true});
+  }
+
+  private async handleEditorUpdate(update: any) {
+    if (update.changes.length) {
+      await this.renderMarkdownToPreviewNode(this.getValue() ?? '');
+    }
+  }
+
+  private async renderMarkdownToPreviewNode(markdown: string) {
+    this.layout.updatePreviewNode(await this.parser.parse(markdown));
   }
 }
 

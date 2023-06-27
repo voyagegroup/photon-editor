@@ -1,13 +1,16 @@
-import {h, patch} from 'superfine';
+import {h, patch, type VNode} from 'superfine';
 
 export type LayoutInterface = {
   render(): void;
   getEditorContainer(): HTMLElement | undefined;
+  updatePreviewNode(node: VNode<any>): void;
 };
 
 export class DefaultLayout implements LayoutInterface {
-  private vdomRoot: HTMLDivElement | undefined;
+  private rootElement: HTMLDivElement | undefined;
   private editorContainer: HTMLElement | undefined;
+  private previewContainer: HTMLDivElement | undefined;
+  private readonly previewVdom: any;
 
   constructor(private readonly parentElement: HTMLElement) {
     this.parentElement = parentElement;
@@ -17,29 +20,42 @@ export class DefaultLayout implements LayoutInterface {
     return this.editorContainer;
   }
 
-  render() {
-    const previewVdom = h('div', {className: 'preview'}, [
-      // ここにMarkdownのHTML変換結果を追加
-    ]);
+  createRootElement() {
+    this.rootElement = document.createElement('div');
+    this.parentElement.appendChild(this.rootElement);
+  }
 
-    const editorContainerVdom = h('div', {className: 'editor-container'});
+  createEditorContainer() {
+    this.editorContainer = document.createElement('div');
+    this.editorContainer.classList.add('editor-container');
 
-    const rootVdom = h('div', {className: 'photon-editor'}, [
-      editorContainerVdom,
-      previewVdom,
-    ]);
+    this.parentElement.appendChild(this.editorContainer);
+  }
 
-    if (this.vdomRoot) {
-      patch(this.vdomRoot, rootVdom);
-    } else {
-      this.vdomRoot = document.createElement('div');
-      this.parentElement.appendChild(this.vdomRoot);
-      patch(this.vdomRoot, rootVdom);
+  createPreviewElement() {
+    this.previewContainer = document.createElement('div');
+    this.previewContainer.classList.add('preview');
+
+    this.parentElement.appendChild(this.previewContainer);
+  }
+
+  mountPreview() {
+    if (this.previewContainer) {
+      patch(this.previewContainer, h('div', {}));
     }
+  }
 
-    const editorContainer = this.vdomRoot.querySelector('.editor-container');
-    if (editorContainer !== null) {
-      this.editorContainer = editorContainer as HTMLElement;
+  render() {
+    this.createRootElement();
+    this.createEditorContainer();
+    this.createPreviewElement();
+
+    this.mountPreview();
+  }
+
+  public updatePreviewNode(node: VNode<any>) {
+    if (this.previewContainer) {
+      patch(this.previewContainer, node);
     }
   }
 }
