@@ -3,9 +3,7 @@ import remarkParse from 'remark-parse';
 import remarkToRehype from 'remark-rehype';
 import type {Root as MdastRoot} from 'mdast';
 import type {Root as HastRoot, Node as HastNode, Element, Text as HastText} from 'hast';
-import {h, text, type VNode, type TTagName, type Props} from 'superfine';
-
-type HtmlElementProperties = Record<string, keyof HTMLElementTagNameMap>;
+import {h, text, type VNode, type TTagName, type Props, type Children} from 'superfine';
 
 export type MarkdownParserInterface = {
   parse(markdown: string): Promise<VNode<TTagName>>;
@@ -29,13 +27,13 @@ export class MarkdownParser {
   }
 
   private rehypeAstToSuperfineVdom(rehypeAst: HastRoot): VNode<TTagName> {
-    const walk = (node: HastNode): VNode<TTagName> | undefined => {
+    const walk = (node: HastNode): Children<TTagName> | undefined => {
       if (node.type === 'element') {
         const element = node as Element;
         return h(
-          element.tagName,
+          element.tagName as TTagName,
           element.properties as Props<TTagName>,
-          (element.children || []).map(walk).filter((child: VNode<TTagName> | undefined) => child !== undefined),
+          (element.children || []).map(walk).filter(child => child !== undefined) as Children<TTagName>,
         );
       }
 
@@ -47,7 +45,7 @@ export class MarkdownParser {
       return undefined;
     };
 
-    const children = rehypeAst.children.map(walk).filter((el: VNode<keyof HTMLElementTagNameMap> | undefined) => el !== undefined);
+    const children = rehypeAst.children.map(walk).filter(child => child !== undefined) as Children<TTagName>;
     const vnode = h('div', {}, children);
 
     return vnode;
