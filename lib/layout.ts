@@ -1,4 +1,4 @@
-import {h, patch, type VNode} from 'superfine';
+import {h, patch, type VNode, type HtmlOrSvgElementTagNameMap} from 'superfine';
 
 export type LayoutInterface = {
   render(): void;
@@ -53,7 +53,7 @@ export class DefaultLayout implements LayoutInterface {
     this.mountPreview();
   }
 
-  public updatePreviewNode(node: VNode<any>) {
+  public updatePreviewNode(node: VNode<keyof HtmlOrSvgElementTagNameMap>) {
     if (this.previewContainer) {
       patch(this.previewContainer, node);
     }
