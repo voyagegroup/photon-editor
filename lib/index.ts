@@ -73,7 +73,11 @@ class PhotonEditor {
         parent: editorContainer,
       });
     });
-    this.layout.render();
+    this.layout.render({
+      previewClass: this.options.previewClass,
+      editorContainerClass: this.options.editorContainerClass,
+      photonEditorClass: this.options.photonEditorClass,
+    });
   }
 
   /**

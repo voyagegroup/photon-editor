@@ -1,7 +1,13 @@
 import {h, patch, type VNode, type HtmlOrSvgElementTagNameMap} from 'superfine';
 
+type Options = {
+  previewClass?: string;
+  editorContainerClass?: string;
+  photonEditorClass?: string;
+};
+
 export type LayoutInterface = {
-  render(): void;
+  render(options: Options): void;
   getEditorContainer(): HTMLElement | undefined;
   updatePreviewNode(node: VNode<any>): void;
 };
@@ -20,21 +26,29 @@ export class DefaultLayout implements LayoutInterface {
     return this.editorContainer;
   }
 
-  createRootElement() {
+  createRootElement(options: Options) {
     this.rootElement = document.createElement('div');
+    if (options.photonEditorClass) {
+      this.rootElement.classList.add(options.photonEditorClass);
+    }
+
     this.parentElement.appendChild(this.rootElement);
   }
 
-  createEditorContainer() {
+  createEditorContainer(options: Options) {
     this.editorContainer = document.createElement('div');
-    this.editorContainer.classList.add('editor-container');
+    if (options.editorContainerClass) {
+      this.editorContainer.classList.add(options.editorContainerClass);
+    }
 
     this.parentElement.appendChild(this.editorContainer);
   }
 
-  createPreviewElement() {
+  createPreviewElement(options: Options) {
     this.previewContainer = document.createElement('div');
-    this.previewContainer.classList.add('preview');
+    if (options.previewClass) {
+      this.previewContainer.classList.add(options.previewClass);
+    }
 
     this.parentElement.appendChild(this.previewContainer);
   }
@@ -45,10 +59,10 @@ export class DefaultLayout implements LayoutInterface {
     }
   }
 
-  render() {
-    this.createRootElement();
-    this.createEditorContainer();
-    this.createPreviewElement();
+  render(options: Options) {
+    this.createRootElement(options);
+    this.createEditorContainer(options);
+    this.createPreviewElement(options);
 
     this.mountPreview();
   }
