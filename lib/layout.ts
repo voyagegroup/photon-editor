@@ -1,4 +1,5 @@
 import {h, patch, type VNode, type HtmlOrSvgElementTagNameMap} from 'superfine';
+import './styles/default.css';
 
 type Options = {
   previewClass?: string;
@@ -10,6 +11,12 @@ export type LayoutInterface = {
   render(options: Options): void;
   getEditorContainer(): HTMLElement | undefined;
   updatePreviewNode(node: VNode<any>): void;
+};
+
+const defaultOptions: Options = {
+  previewClass: 'preview',
+  editorContainerClass: 'editor-container',
+  photonEditorClass: 'parent-container',
 };
 
 export class DefaultLayout implements LayoutInterface {
@@ -35,22 +42,22 @@ export class DefaultLayout implements LayoutInterface {
     this.parentElement.appendChild(this.rootElement);
   }
 
-  createEditorContainer(options: Options) {
+  createEditorContainer(rootElement: HTMLDivElement, options: Options) {
     this.editorContainer = document.createElement('div');
     if (options.editorContainerClass) {
       this.editorContainer.classList.add(options.editorContainerClass);
     }
 
-    this.parentElement.appendChild(this.editorContainer);
+    rootElement.appendChild(this.editorContainer);
   }
 
-  createPreviewElement(options: Options) {
+  createPreviewElement(rootElement: HTMLDivElement, options: Options) {
     this.previewContainer = document.createElement('div');
     if (options.previewClass) {
       this.previewContainer.classList.add(options.previewClass);
     }
 
-    this.parentElement.appendChild(this.previewContainer);
+    rootElement.appendChild(this.previewContainer);
   }
 
   mountPreview() {
@@ -59,10 +66,18 @@ export class DefaultLayout implements LayoutInterface {
     }
   }
 
-  render(options: Options) {
+  render(options: Partial<Options> = {}) {
+    options = {
+      previewClass: options.previewClass ?? defaultOptions.previewClass,
+      editorContainerClass: options.editorContainerClass ?? defaultOptions.editorContainerClass,
+      photonEditorClass: options.photonEditorClass ?? defaultOptions.photonEditorClass,
+    };
+
     this.createRootElement(options);
-    this.createEditorContainer(options);
-    this.createPreviewElement(options);
+    if (this.rootElement) {
+      this.createEditorContainer(this.rootElement, options);
+      this.createPreviewElement(this.rootElement, options);
+    }
 
     this.mountPreview();
   }
