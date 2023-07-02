@@ -4,6 +4,7 @@ import './styles/default.css';
 type Options = {
   previewClass?: string;
   editorContainerClass?: string;
+  editorPreviewContainerClass?: string;
   photonEditorClass?: string;
 };
 
@@ -16,13 +17,16 @@ export type LayoutInterface = {
 const defaultOptions: Options = {
   previewClass: 'preview',
   editorContainerClass: 'editor-container',
-  photonEditorClass: 'parent-container',
+  editorPreviewContainerClass: 'editor-preview-container',
+  photonEditorClass: 'photon-editor',
 };
 
 export class DefaultLayout implements LayoutInterface {
   private rootElement: HTMLDivElement | undefined;
   private editorContainer: HTMLElement | undefined;
   private previewContainer: HTMLDivElement | undefined;
+  private editorPreviewContaienr: HTMLDivElement | undefined;
+  private toolbarContainer: HTMLDivElement | undefined;
   private readonly previewVdom: any;
 
   constructor(private readonly parentElement: HTMLElement) {
@@ -40,6 +44,15 @@ export class DefaultLayout implements LayoutInterface {
     }
 
     this.parentElement.appendChild(this.rootElement);
+  }
+
+  createEditorPreviewContainer(rootElement: HTMLDivElement, options: Options) {
+    this.editorPreviewContaienr = document.createElement('div');
+    if (options.editorPreviewContainerClass) {
+      this.editorPreviewContaienr.classList.add(options.editorPreviewContainerClass);
+    }
+
+    rootElement.appendChild(this.editorPreviewContaienr);
   }
 
   createEditorContainer(rootElement: HTMLDivElement, options: Options) {
@@ -60,6 +73,24 @@ export class DefaultLayout implements LayoutInterface {
     rootElement.appendChild(this.previewContainer);
   }
 
+  createToolbarContainer(rootElement: HTMLDivElement) {
+    this.toolbarContainer = document.createElement('div');
+    this.toolbarContainer.classList.add('toolbar');
+    rootElement.insertBefore(this.toolbarContainer, rootElement.firstChild);
+  }
+
+  initializeToolbar() {
+    if (this.toolbarContainer) {
+      patch(this.toolbarContainer, h('div', {}, []));
+    }
+  }
+
+  updateToolbarNode(node: VNode<keyof HtmlOrSvgElementTagNameMap>) {
+    if (this.toolbarContainer) {
+      patch(this.toolbarContainer, node);
+    }
+  }
+
   mountPreview() {
     if (this.previewContainer) {
       patch(this.previewContainer, h('div', {}));
@@ -71,12 +102,20 @@ export class DefaultLayout implements LayoutInterface {
       previewClass: options.previewClass ?? defaultOptions.previewClass,
       editorContainerClass: options.editorContainerClass ?? defaultOptions.editorContainerClass,
       photonEditorClass: options.photonEditorClass ?? defaultOptions.photonEditorClass,
+      editorPreviewContainerClass: options.editorPreviewContainerClass ?? defaultOptions.editorPreviewContainerClass,
     };
 
     this.createRootElement(options);
     if (this.rootElement) {
-      this.createEditorContainer(this.rootElement, options);
-      this.createPreviewElement(this.rootElement, options);
+      this.createEditorPreviewContainer(this.rootElement, options);
+
+      this.createToolbarContainer(this.rootElement);
+      this.initializeToolbar();
+    }
+
+    if (this.editorPreviewContaienr) {
+      this.createEditorContainer(this.editorPreviewContaienr, options);
+      this.createPreviewElement(this.editorPreviewContaienr, options);
     }
 
     this.mountPreview();
