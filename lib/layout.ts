@@ -1,14 +1,21 @@
-import {h, patch, type VNode, type HtmlOrSvgElementTagNameMap} from 'superfine';
+import {h, patch, text, type VNode, type HtmlOrSvgElementTagNameMap} from 'superfine';
+import {type Emitter} from 'mitt';
+
 import './styles/default.css';
+
+type ToolbarItem = string | VNode<any>;
 
 type Options = {
   previewClass?: string;
   editorContainerClass?: string;
   editorPreviewContainerClass?: string;
   photonEditorClass?: string;
+  toolbarItems?: ToolbarItem[][];
 };
 
 export type LayoutInterface = {
+  emitter: Emitter<any>;
+
   render(options: Options): void;
   getEditorContainer(): HTMLElement | undefined;
   updatePreviewNode(node: VNode<any>): void;
@@ -19,6 +26,13 @@ const defaultOptions: Options = {
   editorContainerClass: 'editor-container',
   editorPreviewContainerClass: 'editor-preview-container',
   photonEditorClass: 'photon-editor',
+  toolbarItems: [
+    ['heading', 'bold', 'italic', 'strike'],
+    ['hr', 'quote'],
+    ['ul', 'ol', 'task'],
+    ['table', 'image', 'link'],
+    ['code', 'codeblock'],
+  ],
 };
 
 export class DefaultLayout implements LayoutInterface {
@@ -29,7 +43,8 @@ export class DefaultLayout implements LayoutInterface {
   private toolbarContainer: HTMLDivElement | undefined;
   private readonly previewVdom: any;
 
-  constructor(private readonly parentElement: HTMLElement) {
+  constructor(readonly emitter: Emitter<any>, private readonly parentElement: HTMLElement) {
+    this.emitter = emitter;
     this.parentElement = parentElement;
   }
 
@@ -79,10 +94,40 @@ export class DefaultLayout implements LayoutInterface {
     rootElement.insertBefore(this.toolbarContainer, rootElement.firstChild);
   }
 
-  initializeToolbar() {
-    if (this.toolbarContainer) {
-      patch(this.toolbarContainer, h('div', {}, []));
+  initializeToolbar(options: Options) {
+    if (!this.toolbarContainer) {
+      return;
     }
+
+    const toolbarItems = options.toolbarItems ?? [];
+    const toolbarChildren: Array<VNode<any>> = [];
+
+    for (const itemGroup of toolbarItems) {
+      const groupChildren: Array<VNode<any>> = [];
+
+      for (const item of itemGroup) {
+        if (typeof item === 'string') {
+          const buttonNode = h(
+            'button',
+            {
+              class: `toolbar-button-${item}`,
+              onclick: () => {
+                this.emitter.emit(`${item}ButtonClicked`);
+              },
+            },
+            [text(item)],
+          );
+          groupChildren.push(buttonNode);
+        } else {
+          groupChildren.push(item);
+        }
+      }
+
+      toolbarChildren.push(h('div', {}, groupChildren));
+    }
+
+    console.log(this.toolbarContainer, toolbarChildren);
+    patch(this.toolbarContainer, h('div', {}, toolbarChildren));
   }
 
   updateToolbarNode(node: VNode<keyof HtmlOrSvgElementTagNameMap>) {
@@ -103,6 +148,7 @@ export class DefaultLayout implements LayoutInterface {
       editorContainerClass: options.editorContainerClass ?? defaultOptions.editorContainerClass,
       photonEditorClass: options.photonEditorClass ?? defaultOptions.photonEditorClass,
       editorPreviewContainerClass: options.editorPreviewContainerClass ?? defaultOptions.editorPreviewContainerClass,
+      toolbarItems: options.toolbarItems ?? defaultOptions.toolbarItems,
     };
 
     this.createRootElement(options);
@@ -110,7 +156,7 @@ export class DefaultLayout implements LayoutInterface {
       this.createEditorPreviewContainer(this.rootElement, options);
 
       this.createToolbarContainer(this.rootElement);
-      this.initializeToolbar();
+      this.initializeToolbar(options);
     }
 
     if (this.editorPreviewContaienr) {

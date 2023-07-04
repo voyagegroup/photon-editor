@@ -7,6 +7,11 @@
     height: 45px;
     background-color: #f9faff;
     border-bottom: 1px solid #cecfd5;
+
+    > div {
+      display: inline-block;
+      margin: 0 10px;
+    }
   }
 
   .editor-preview-container {

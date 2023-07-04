@@ -10,6 +10,9 @@ dependencies:
   hyperapp:
     specifier: ^2.0.22
     version: 2.0.22
+  mitt:
+    specifier: ^3.0.0
+    version: 3.0.0
   rehype:
     specifier: ^12.0.1
     version: 12.0.1
@@ -2132,6 +2135,10 @@ packages:
     dependencies:
       brace-expansion: 1.1.11
     dev: true
+
+  /mitt@3.0.0:
+    resolution: {integrity: sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==}
+    dev: false
 
   /mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}

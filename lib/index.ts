@@ -19,6 +19,8 @@ import {EditorState} from '@codemirror/state';
 import {keymap, EditorView} from '@codemirror/view';
 import {markdown} from '@codemirror/lang-markdown';
 import {syntaxHighlighting} from '@codemirror/language';
+import mitt, {type Emitter} from 'mitt';
+
 import markdownHighlight from './highlight/markdown';
 import {type LayoutInterface, DefaultLayout} from './layout';
 import {type MarkdownParserInterface, MarkdownParser} from './parser';
@@ -34,6 +36,7 @@ type Options = {
  * Represents the main PhotonEditor class.
  */
 class PhotonEditor {
+  private readonly emitter: Emitter<any>;
   private editor: EditorView | undefined;
   private readonly layout: LayoutInterface;
   private readonly parser: MarkdownParserInterface;
@@ -51,8 +54,18 @@ class PhotonEditor {
     parser?: MarkdownParserInterface,
     layout?: LayoutInterface,
   ) {
-    this.layout = layout ?? new DefaultLayout(this.element);
+    this.emitter = mitt();
+
+    this.layout = layout ?? new DefaultLayout(this.emitter, this.element);
     this.parser = parser ?? new MarkdownParser();
+  }
+
+  on(eventName: string, callback: (event: any) => void) {
+    this.emitter.on(eventName, callback);
+  }
+
+  getEmitter(): Emitter<any> {
+    return this.emitter;
   }
 
   /**
