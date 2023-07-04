@@ -112,7 +112,7 @@ export class DefaultLayout implements LayoutInterface {
             {
               class: `toolbar-button-${item}`,
               onclick: () => {
-                this.emitter.emit(`${item}ButtonClicked`);
+                this.emitter.emit(`toolbarButton:${item}:clicked`);
               },
             },
             [text(item)],

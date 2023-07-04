@@ -24,6 +24,7 @@ import mitt, {type Emitter} from 'mitt';
 import markdownHighlight from './highlight/markdown';
 import {type LayoutInterface, DefaultLayout} from './layout';
 import {type MarkdownParserInterface, MarkdownParser} from './parser';
+import {defaultButtonTypes, createDefaultButtonListener} from './listener';
 
 type Options = {
   value: string | undefined;
@@ -85,6 +86,10 @@ class PhotonEditor {
         }),
         parent: editorContainer,
       });
+
+      for (const buttonType of defaultButtonTypes) {
+        this.emitter.on(`toolbarButton:${buttonType}:clicked`, createDefaultButtonListener(buttonType, this.editor));
+      }
     });
     this.layout.render({
       previewClass: this.options.previewClass,
