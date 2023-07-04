@@ -14,7 +14,7 @@
  * limitations under the License
  */
 
-import {defaultKeymap} from '@codemirror/commands';
+import {defaultKeymap, history} from '@codemirror/commands';
 import {EditorState} from '@codemirror/state';
 import {keymap, EditorView} from '@codemirror/view';
 import {markdown} from '@codemirror/lang-markdown';
@@ -80,6 +80,7 @@ class PhotonEditor {
           extensions: [
             markdown(),
             keymap.of(defaultKeymap),
+            history(),
             syntaxHighlighting(markdownHighlight),
             EditorView.updateListener.of(this.handleEditorUpdate.bind(this)),
           ],
