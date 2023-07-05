@@ -110,12 +110,12 @@ export class DefaultLayout implements LayoutInterface {
           const buttonNode = h(
             'button',
             {
-              class: `toolbar-button-${item}`,
+              class: `toolbar-button ${item}`,
               onclick: () => {
                 this.emitter.emit(`toolbarButton:${item}:clicked`);
               },
             },
-            [text(item)],
+            [],
           );
           groupChildren.push(buttonNode);
         } else {

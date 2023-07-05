@@ -10,6 +10,9 @@ dependencies:
   hyperapp:
     specifier: ^2.0.22
     version: 2.0.22
+  material-icons:
+    specifier: ^1.13.8
+    version: 1.13.8
   mitt:
     specifier: ^3.0.0
     version: 3.0.0
@@ -1861,6 +1864,10 @@ packages:
     dependencies:
       yallist: 4.0.0
     dev: true
+
+  /material-icons@1.13.8:
+    resolution: {integrity: sha512-vnLGXKa/AwFUxUgkiX39EpYVFttPhDQcKdVylIqmUUqz+Eo/O9A3BkdPCU3/G5cJOTezHi5B/b8sEpKYgUNAwQ==}
+    dev: false
 
   /mdast-util-definitions@5.1.2:
     resolution: {integrity: sha512-8SVPMuHqlPME/z3gqVwWY4zVXn8lqKv/pAhC57FuJ40ImXyBpmO5ukh98zB2v7Blql2FiHjHv9LVztSIqjY+MA==}
