@@ -9,7 +9,7 @@
   }
 
   .toolbar {
-    width: 100%;
+    width: calc(100% - 10px);
     height: 34px;
     background-color: #f9faff;
     border-bottom: 1px solid #cecfd5;
