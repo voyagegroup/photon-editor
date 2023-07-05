@@ -1,4 +1,4 @@
-import {h, patch, text, type VNode, type HtmlOrSvgElementTagNameMap} from 'superfine';
+import {h, app, type VNode} from 'hyperapp';
 import {type Emitter} from 'mitt';
 
 import './styles/default.css';
@@ -18,7 +18,7 @@ export type LayoutInterface = {
 
   render(options: Options): void;
   getEditorContainer(): HTMLElement | undefined;
-  updatePreviewNode(node: VNode<any>): void;
+  getPreviewContainer(): HTMLDivElement | undefined;
 };
 
 const defaultOptions: Options = {
@@ -41,7 +41,6 @@ export class DefaultLayout implements LayoutInterface {
   private previewContainer: HTMLDivElement | undefined;
   private editorPreviewContaienr: HTMLDivElement | undefined;
   private toolbarContainer: HTMLDivElement | undefined;
-  private readonly previewVdom: any;
 
   constructor(readonly emitter: Emitter<any>, private readonly parentElement: HTMLElement) {
     this.emitter = emitter;
@@ -50,6 +49,10 @@ export class DefaultLayout implements LayoutInterface {
 
   getEditorContainer() {
     return this.editorContainer;
+  }
+
+  getPreviewContainer() {
+    return this.previewContainer;
   }
 
   createRootElement(options: Options) {
@@ -126,20 +129,11 @@ export class DefaultLayout implements LayoutInterface {
       toolbarChildren.push(h('div', {}, groupChildren));
     }
 
-    console.log(this.toolbarContainer, toolbarChildren);
-    patch(this.toolbarContainer, h('div', {}, toolbarChildren));
-  }
-
-  updateToolbarNode(node: VNode<keyof HtmlOrSvgElementTagNameMap>) {
-    if (this.toolbarContainer) {
-      patch(this.toolbarContainer, node);
-    }
-  }
-
-  mountPreview() {
-    if (this.previewContainer) {
-      patch(this.previewContainer, h('div', {}));
-    }
+    app({
+      init: {},
+      view: () => h('div', {}, toolbarChildren),
+      node: this.toolbarContainer,
+    });
   }
 
   render(options: Partial<Options> = {}) {
@@ -162,14 +156,6 @@ export class DefaultLayout implements LayoutInterface {
     if (this.editorPreviewContaienr) {
       this.createEditorContainer(this.editorPreviewContaienr, options);
       this.createPreviewElement(this.editorPreviewContaienr, options);
-    }
-
-    this.mountPreview();
-  }
-
-  public updatePreviewNode(node: VNode<keyof HtmlOrSvgElementTagNameMap>) {
-    if (this.previewContainer) {
-      patch(this.previewContainer, node);
     }
   }
 }

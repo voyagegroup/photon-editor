@@ -20,6 +20,7 @@ import {keymap, EditorView} from '@codemirror/view';
 import {markdown} from '@codemirror/lang-markdown';
 import {syntaxHighlighting} from '@codemirror/language';
 import mitt, {type Emitter} from 'mitt';
+import {app, h, type Dispatch} from 'hyperapp';
 
 import markdownHighlight from './highlight/markdown';
 import {type LayoutInterface, DefaultLayout} from './layout';
@@ -39,6 +40,7 @@ type Options = {
 class PhotonEditor {
   private readonly emitter: Emitter<any>;
   private editor: EditorView | undefined;
+  private previewAppDispatch: Dispatch<any> | undefined;
   private readonly layout: LayoutInterface;
   private readonly parser: MarkdownParserInterface;
 
@@ -92,11 +94,27 @@ class PhotonEditor {
         this.emitter.on(`toolbarButton:${buttonType}:clicked`, createDefaultButtonListener(buttonType, this.editor));
       }
     });
+
     this.layout.render({
       previewClass: this.options.previewClass,
       editorContainerClass: this.options.editorContainerClass,
       photonEditorClass: this.options.photonEditorClass,
     });
+
+    const previewContainer = this.layout.getPreviewContainer();
+    if (previewContainer) {
+      this.previewAppDispatch = app({
+        init: {
+          markdown: this.getValue() ?? '',
+        },
+        view: state => h('div', {}, this.parser.parse(state.markdown)),
+        node: previewContainer,
+        dispatch: dispatch => {
+          this.previewAppDispatch = dispatch;
+          return dispatch;
+        },
+      });
+    }
   }
 
   /**
@@ -143,14 +161,14 @@ class PhotonEditor {
     observer.observe(this.element, {childList: true, subtree: true});
   }
 
-  private async handleEditorUpdate(update: any) {
-    if (update.changes.length) {
-      await this.renderMarkdownToPreviewNode(this.getValue() ?? '');
-    }
+  private updatePreviewState(state: any, markdown: string): any {
+    return {...state, markdown};
   }
 
-  private async renderMarkdownToPreviewNode(markdown: string) {
-    this.layout.updatePreviewNode(await this.parser.parse(markdown));
+  private async handleEditorUpdate(update: any) {
+    if (update.changes.length && this.previewAppDispatch) {
+      this.previewAppDispatch(this.updatePreviewState, this.getValue() ?? '');
+    }
   }
 }
 

@@ -3,16 +3,16 @@ import remarkParse from 'remark-parse';
 import remarkToRehype from 'remark-rehype';
 import type {Root as MdastRoot} from 'mdast';
 import type {Root as HastRoot, Node as HastNode, Element, Text as HastText} from 'hast';
-import {h, text, type VNode, type TTagName, type Props, type Children, type HtmlOrSvgElementTagNameMap} from 'superfine';
+import {h, text, type VNode, type Props} from 'hyperapp';
 
 export type MarkdownParserInterface = {
-  parse(markdown: string): Promise<VNode<TTagName>>;
+  parse(markdown: string): VNode<any>;
 };
 
 export class MarkdownParser {
-  async parse(markdown: string): Promise<VNode<TTagName>> {
+  parse(markdown: string): VNode<any> {
     const remarkAst = this.markdownToAst(markdown);
-    const rehypeAst = await this.remarkAstToRehypeAst(remarkAst);
+    const rehypeAst = this.remarkAstToRehypeAst(remarkAst);
     const superfineVdom = this.rehypeAstToSuperfineVdom(rehypeAst);
 
     return superfineVdom;
@@ -22,18 +22,18 @@ export class MarkdownParser {
     return unified().use(remarkParse).parse(markdown);
   }
 
-  private async remarkAstToRehypeAst(remarkAst: MdastRoot): Promise<HastRoot> {
-    return unified().use(remarkToRehype).run(remarkAst) as Promise<HastRoot>;
+  private remarkAstToRehypeAst(remarkAst: MdastRoot): MdastRoot {
+    return unified().use(remarkToRehype).runSync(remarkAst);
   }
 
-  private rehypeAstToSuperfineVdom(rehypeAst: HastRoot): VNode<TTagName> {
-    const walk = (node: HastNode): Children<TTagName> | undefined => {
+  private rehypeAstToSuperfineVdom(rehypeAst: MdastRoot): VNode<any> {
+    const walk = (node: HastNode): VNode<any> | undefined => {
       if (node.type === 'element') {
         const element = node as Element;
         return h(
-          element.tagName as keyof HtmlOrSvgElementTagNameMap,
-          element.properties as Props<keyof HtmlOrSvgElementTagNameMap>,
-          (element.children || []).map(walk).filter(child => child !== undefined) as Children<TTagName>,
+          element.tagName,
+          element.properties as Props<any>,
+          (element.children || []).map(walk).filter(child => child !== undefined) as Array<VNode<any>>,
         );
       }
 
@@ -45,7 +45,7 @@ export class MarkdownParser {
       return undefined;
     };
 
-    const children = rehypeAst.children.map(walk).filter(child => child !== undefined) as Children<TTagName>;
+    const children = rehypeAst.children.map(walk).filter(child => child !== undefined) as Array<VNode<any>>;
     const vnode = h('div', {}, children);
 
     return vnode;
