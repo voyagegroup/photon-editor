@@ -1,0 +1,128 @@
+@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
+
+.photon-editor {
+  border: 1px solid #cecfd5;
+  border-radius: 5px;
+
+  .cm-focused {
+    outline: none;
+  }
+
+  .toolbar {
+    width: calc(100% - 10px);
+    height: 34px;
+    background-color: #f9faff;
+    border-bottom: 1px solid #cecfd5;
+    padding: 5px;
+
+    > div {
+      display: inline-block;
+      margin: 0 10px;
+    }
+  }
+
+  .editor-preview-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .editor-container {
+    flex: 1 1 auto;
+    overflow: auto;
+    height: auto;
+    border-right: 2px solid #cecfd5;
+    padding: 10px;
+  }
+
+  .preview {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 10px;
+    height: auto;
+  }
+}
+
+.toolbar-button {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+
+  &::before {
+    content: attr(data-icon);
+    font-family: 'Material Icons';
+    font-size: 24px;
+    display: inline-block;
+    font-style: normal;
+    -webkit-font-feature-settings: 'liga';
+    font-feature-settings: 'liga';
+    text-rendering: auto;
+    width: 24px;
+    overflow: hidden; 
+  }
+
+  &.heading::before {
+    content: 'title';
+  }
+
+  &.bold::before {
+    content: 'format_bold';
+  }
+
+  &.italic::before {
+    content: 'format_italic';
+  }
+
+  &.strike::before {
+    content: 'format_strikethrough';
+  }
+
+  &.hr::before {
+    content: 'remove';
+  }
+
+  &.quote::before {
+    content: 'format_quote';
+  }
+
+  &.ul::before {
+    content: 'format_list_bulleted';
+  }
+
+  &.ol::before {
+    content: 'format_list_numbered';
+  }
+
+  &.task::before {
+    content: 'check_box_outline_blank';
+  }
+
+  &.table::before {
+    content: 'table';
+  }
+
+  &.image::before {
+    content: 'image';
+  }
+
+  &.link::before {
+    content: 'link';
+  }
+
+  &.code::before {
+    content: 'code';
+  }
+
+  &.codeblock::before {
+    content: 'code_off';
+  }
+}
+
+.toolbar-button.heading > div {
+  background-color: white;
+  width: 300px;
+  z-index: 1000;
+}
+
+.toolbar-button.heading > div ul {
+  list-style: none;
+}

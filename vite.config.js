@@ -4,4 +4,7 @@ export default defineConfig({
   build: {
     outDir: 'build',
   },
+  css: {
+    transformer: 'lightningcss',
+  },
 });
