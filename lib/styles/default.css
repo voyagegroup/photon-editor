@@ -116,3 +116,13 @@
     content: 'code_off';
   }
 }
+
+.toolbar-button.heading > div {
+  background-color: white;
+  width: 300px;
+  z-index: 1000;
+}
+
+.toolbar-button.heading > div ul {
+  list-style: none;
+}

@@ -1,9 +1,14 @@
-import {h, app, type VNode} from 'hyperapp';
+import {h, app, text, type VNode, type CustomPayloads} from 'hyperapp';
 import {type Emitter} from 'mitt';
+
+import {HeadingButton} from './components/HeadingDrawer';
 
 import './styles/default.css';
 
-type ToolbarItem = string | VNode<any>;
+type ToolbarItem = string | {
+  component: ((props: CustomPayloads<any, any>) => VNode<any>);
+  props: CustomPayloads<any, any>;
+};
 
 type Options = {
   previewClass?: string;
@@ -27,7 +32,14 @@ const defaultOptions: Options = {
   editorPreviewContainerClass: 'editor-preview-container',
   photonEditorClass: 'photon-editor',
   toolbarItems: [
-    ['heading', 'bold', 'italic', 'strike'],
+    [
+      {component: HeadingButton, props: {levels: [1, 2, 3, 4, 5, 6], onSelect(ev: any) {
+        console.log(ev);
+      }}},
+      'bold',
+      'italic',
+      'strike',
+    ],
     ['hr', 'quote'],
     ['ul', 'ol', 'task'],
     ['table', 'image', 'link'],
@@ -102,36 +114,44 @@ export class DefaultLayout implements LayoutInterface {
       return;
     }
 
-    const toolbarItems = options.toolbarItems ?? [];
-    const toolbarChildren: Array<VNode<any>> = [];
+    const toolbarComponent = (props: CustomPayloads<any, any>) => {
+      const toolbarItems = options.toolbarItems ?? [];
+      const toolbarChildren: Array<VNode<any>> = [];
 
-    for (const itemGroup of toolbarItems) {
-      const groupChildren: Array<VNode<any>> = [];
+      for (const itemGroup of toolbarItems) {
+        const groupChildren: Array<VNode<any>> = [];
 
-      for (const item of itemGroup) {
-        if (typeof item === 'string') {
-          const buttonNode = h(
-            'button',
-            {
-              class: `toolbar-button ${item}`,
-              onclick: () => {
-                this.emitter.emit(`toolbarButton:${item}:clicked`);
+        for (const item of itemGroup) {
+          if (typeof item === 'string') {
+            const buttonNode = h(
+              'button',
+              {
+                class: `toolbar-button ${item}`,
+                onclick: () => {
+                  this.emitter.emit(`toolbarButton:${item}:clicked`);
+                },
               },
-            },
-            [],
-          );
-          groupChildren.push(buttonNode);
-        } else {
-          groupChildren.push(item);
+              [],
+            );
+            groupChildren.push(buttonNode);
+          } else {
+            groupChildren.push(item.component({...props, ...item.props}));
+          }
         }
+
+        toolbarChildren.push(h('div', {}, groupChildren));
       }
 
-      toolbarChildren.push(h('div', {}, groupChildren));
-    }
+      return toolbarChildren;
+    };
 
     app({
-      init: {},
-      view: () => h('div', {}, toolbarChildren),
+      init: {
+        active: '',
+        params: {
+        },
+      },
+      view: state => h('div', {}, toolbarComponent(state)),
       node: this.toolbarContainer,
     });
   }
