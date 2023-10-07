@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@codemirror/language':
     specifier: ^6.6.0
@@ -17,7 +21,7 @@ devDependencies:
     version: 6.1.1
   '@codemirror/language-data':
     specifier: ^6.2.0
-    version: 6.2.0(@codemirror/state@6.2.0)(@codemirror/view@6.9.4)
+    version: 6.2.0(@codemirror/state@6.2.0)(@codemirror/view@6.9.4)(@lezer/common@1.0.2)
   '@codemirror/state':
     specifier: ^6.2.0
     version: 6.2.0
@@ -57,19 +61,6 @@ devDependencies:
 
 packages:
 
-  /@codemirror/autocomplete@6.5.1(@codemirror/language@6.6.0)(@codemirror/state@6.2.0)(@codemirror/view@6.9.4):
-    resolution: {integrity: sha512-/Sv9yJmqyILbZ26U4LBHnAtbikuVxWUp+rQ8BXuRGtxZfbfKOY/WPbsUtvSP2h0ZUZMlkxV/hqbKRFzowlA6xw==}
-    peerDependencies:
-      '@codemirror/language': ^6.0.0
-      '@codemirror/state': ^6.0.0
-      '@codemirror/view': ^6.0.0
-      '@lezer/common': ^1.0.0
-    dependencies:
-      '@codemirror/language': 6.6.0
-      '@codemirror/state': 6.2.0
-      '@codemirror/view': 6.9.4
-    dev: true
-
   /@codemirror/autocomplete@6.5.1(@codemirror/language@6.6.0)(@codemirror/state@6.2.0)(@codemirror/view@6.9.4)(@lezer/common@1.0.2):
     resolution: {integrity: sha512-/Sv9yJmqyILbZ26U4LBHnAtbikuVxWUp+rQ8BXuRGtxZfbfKOY/WPbsUtvSP2h0ZUZMlkxV/hqbKRFzowlA6xw==}
     peerDependencies:
@@ -108,18 +99,6 @@ packages:
     dependencies:
       '@codemirror/language': 6.6.0
       '@lezer/cpp': 1.1.0
-    dev: true
-
-  /@codemirror/lang-css@6.1.1(@codemirror/view@6.9.4):
-    resolution: {integrity: sha512-P6jdNEHyRcqqDgbvHYyC9Wxkek0rnG3a9aVSRi4a7WrjPbQtBTaOmvYpXmm13zZMAatO4Oqpac+0QZs7sy+LnQ==}
-    dependencies:
-      '@codemirror/autocomplete': 6.5.1(@codemirror/language@6.6.0)(@codemirror/state@6.2.0)(@codemirror/view@6.9.4)
-      '@codemirror/language': 6.6.0
-      '@codemirror/state': 6.2.0
-      '@lezer/css': 1.1.1
-    transitivePeerDependencies:
-      - '@codemirror/view'
-      - '@lezer/common'
     dev: true
 
   /@codemirror/lang-css@6.1.1(@codemirror/view@6.9.4)(@lezer/common@1.0.2):
@@ -195,10 +174,10 @@ packages:
       '@lezer/php': 1.0.1
     dev: true
 
-  /@codemirror/lang-python@6.1.2(@codemirror/state@6.2.0)(@codemirror/view@6.9.4):
+  /@codemirror/lang-python@6.1.2(@codemirror/state@6.2.0)(@codemirror/view@6.9.4)(@lezer/common@1.0.2):
     resolution: {integrity: sha512-nbQfifLBZstpt6Oo4XxA2LOzlSp4b/7Bc5cmodG1R+Cs5PLLCTUvsMNWDnziiCfTOG/SW1rVzXq/GbIr6WXlcw==}
     dependencies:
-      '@codemirror/autocomplete': 6.5.1(@codemirror/language@6.6.0)(@codemirror/state@6.2.0)(@codemirror/view@6.9.4)
+      '@codemirror/autocomplete': 6.5.1(@codemirror/language@6.6.0)(@codemirror/state@6.2.0)(@codemirror/view@6.9.4)(@lezer/common@1.0.2)
       '@codemirror/language': 6.6.0
       '@lezer/python': 1.1.4
     transitivePeerDependencies:
@@ -214,10 +193,10 @@ packages:
       '@lezer/rust': 1.0.0
     dev: true
 
-  /@codemirror/lang-sql@6.4.1(@codemirror/view@6.9.4):
+  /@codemirror/lang-sql@6.4.1(@codemirror/view@6.9.4)(@lezer/common@1.0.2):
     resolution: {integrity: sha512-PFB56L+A0WGY35uRya+Trt5g19V9k2V9X3c55xoFW4RgiATr/yLqWsbbnEsdxuMn5tLpuikp7Kmj9smRsqBXAg==}
     dependencies:
-      '@codemirror/autocomplete': 6.5.1(@codemirror/language@6.6.0)(@codemirror/state@6.2.0)(@codemirror/view@6.9.4)
+      '@codemirror/autocomplete': 6.5.1(@codemirror/language@6.6.0)(@codemirror/state@6.2.0)(@codemirror/view@6.9.4)(@lezer/common@1.0.2)
       '@codemirror/language': 6.6.0
       '@codemirror/state': 6.2.0
       '@lezer/highlight': 1.1.4
@@ -258,21 +237,21 @@ packages:
       - '@codemirror/view'
     dev: true
 
-  /@codemirror/language-data@6.2.0(@codemirror/state@6.2.0)(@codemirror/view@6.9.4):
+  /@codemirror/language-data@6.2.0(@codemirror/state@6.2.0)(@codemirror/view@6.9.4)(@lezer/common@1.0.2):
     resolution: {integrity: sha512-X0k33cmGmhdBVjKABgVtF6dH+zC0ODjLbCHCciY4kGimGX0hr7aui9+upj0Fumu8nr9ggQ36xLAR0EQ1JktKhw==}
     dependencies:
       '@codemirror/lang-angular': 0.1.0
       '@codemirror/lang-cpp': 6.0.2
-      '@codemirror/lang-css': 6.1.1(@codemirror/view@6.9.4)
+      '@codemirror/lang-css': 6.1.1(@codemirror/view@6.9.4)(@lezer/common@1.0.2)
       '@codemirror/lang-html': 6.4.3
       '@codemirror/lang-java': 6.0.1
       '@codemirror/lang-javascript': 6.1.6
       '@codemirror/lang-json': 6.0.1
       '@codemirror/lang-markdown': 6.1.1
       '@codemirror/lang-php': 6.0.1
-      '@codemirror/lang-python': 6.1.2(@codemirror/state@6.2.0)(@codemirror/view@6.9.4)
+      '@codemirror/lang-python': 6.1.2(@codemirror/state@6.2.0)(@codemirror/view@6.9.4)(@lezer/common@1.0.2)
       '@codemirror/lang-rust': 6.0.1
-      '@codemirror/lang-sql': 6.4.1(@codemirror/view@6.9.4)
+      '@codemirror/lang-sql': 6.4.1(@codemirror/view@6.9.4)(@lezer/common@1.0.2)
       '@codemirror/lang-vue': 0.1.1
       '@codemirror/lang-wast': 6.0.1
       '@codemirror/lang-xml': 6.0.2(@codemirror/view@6.9.4)
@@ -1746,8 +1725,8 @@ packages:
     hasBin: true
     dev: true
 
-  /postcss@8.4.21:
-    resolution: {integrity: sha512-tP7u/Sn/dVxK2NnruI4H9BG+x+Wxz6oeZ1cJ8P6G/PZY0IKk4k/63TDsQf2kQq3+qoJeLm2kIBUNlZe3zgb4Zg==}
+  /postcss@8.4.31:
+    resolution: {integrity: sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.3.6
@@ -2037,7 +2016,7 @@ packages:
         optional: true
     dependencies:
       esbuild: 0.17.16
-      postcss: 8.4.21
+      postcss: 8.4.31
       resolve: 1.22.2
       rollup: 3.20.2
     optionalDependencies:
